@@ -1,0 +1,11 @@
+version: "2"
+
+services:
+  php:
+      container_name: zoo_php
+      build: ./php
+      volumes:
+          - ../app:/var/www/app
+      expose:
+          - "9000"
+      tty: true

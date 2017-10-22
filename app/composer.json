@@ -1,0 +1,30 @@
+{
+    "name": "andrey/technical-task",
+    "description": "Amadeus technical task",
+    "type": "project",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "authors": [
+        {
+            "name": "Znamen Andrey",
+            "email": "andriy.znamen@gmail.com"
+        }
+    ],
+
+    "autoload": {
+        "psr-4": { "": "src/" }
+    },
+
+    "autoload-dev": {
+        "psr-4": { "Tests\\": "tests/" }
+    },
+
+    "require": {
+        "php": ">=7.0",
+        "monolog/monolog": "^1.23"
+    },
+
+    "require-dev": {
+        "phpunit/phpunit": "^6.0"
+    }
+}

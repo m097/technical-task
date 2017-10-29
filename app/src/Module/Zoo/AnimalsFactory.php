@@ -16,7 +16,7 @@ class AnimalsFactory
     /**
      * @return array
      */
-    public static function getAnimals() : array
+    public function getAnimals() : array
     {
         return [
             new Cat(),

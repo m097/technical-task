@@ -3,6 +3,10 @@ namespace Core;
 
 use Module\Zoo\AnimalsFactory;
 use Module\Zoo\Zoo;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
 
 /**
  * Class App
@@ -10,23 +14,34 @@ use Module\Zoo\Zoo;
  */
 class App
 {
+    private $container;
+
+    public function __construct()
+    {
+        $appRoot = dirname(__DIR__, 2);
+        $this->container = new ContainerBuilder();
+        $loader = new YamlFileLoader($this->container, new FileLocator($appRoot.'/config'));
+        $loader->load('services.yml');
+        $this->container->setParameter('app_root', $appRoot);
+    }
+
     /**
      * Run application
      */
     public function run() : void
     {
         try{
-            Logger::getInstance()->log()->debug('Start application');
+            $this->container->get('logger')->log()->debug('Start application');
 
-            $animals = AnimalsFactory::getAnimals();
+            $animals = $this->container->get('animal_factory')->getAnimals();
             $zoo = new Zoo();
             $zoo->addAnimals($animals);
             $zoo->showAnimalSkills();
 
-            Logger::getInstance()->log()->debug('End execution');
+            $this->container->get('logger')->log()->debug('End execution');
         } catch (\Exception $exception) {
             echo 'Application error'.PHP_EOL;
-            Logger::getInstance()->log()->error($exception->getMessage());
+            $this->container->get('logger')->log()->error($exception->getMessage());
         }
     }
 

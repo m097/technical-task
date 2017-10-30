@@ -2,10 +2,10 @@
 
 namespace Module\Zoo;
 
-use Module\Zoo\Animals\Cat;
-use Module\Zoo\Animals\Dog;
-use Module\Zoo\Animals\Rat;
-use Module\Zoo\Animals\Sparrow;
+use Module\Zoo\Animals\Birds\Sparrow;
+use Module\Zoo\Animals\Mammals\Predatory\Cat;
+use Module\Zoo\Animals\Mammals\Predatory\Dog;
+use Module\Zoo\Animals\Mammals\Rodents\Rat;
 
 /**
  * Class AnimalsFactory

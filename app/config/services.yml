@@ -4,5 +4,12 @@ services:
     logger:
         class: Core\Util\Logger
         arguments: ['%app_root%']
+
     animal_factory:
         class: Module\Zoo\AnimalsFactory
+
+    zoo:
+        class: Module\Zoo\Zoo
+        calls:
+            - [ setLogger, ['@logger']]
+

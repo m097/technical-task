@@ -2,7 +2,10 @@
 
 namespace Module\Zoo\Animals;
 
-use Core\Logger;
+use Module\Zoo\Animals\Traits\Fly;
+use Module\Zoo\Animals\Traits\Voice;
+use Module\Zoo\Animals\Traits\Walk;
+use Module\Zoo\Exceptions\AnimalException;
 
 /**
  * Class AbstractAnimal
@@ -10,43 +13,96 @@ use Core\Logger;
  */
 abstract class AbstractAnimal
 {
+    use Voice;
+    use Walk;
+    use Fly;
+
     /**
-     * @return string
+     * @var string
      */
-    abstract public static function getName() : string ;
+    private $type;
+
+    protected $actions = [];
 
     /**
      * @return void
      */
-    abstract public function behave() : void;
+    public function behave() : void
+    {
+        if (!array_key_exists('eat', $this->actions)) {
+            $this->actions['eat'] = ['food'];
+        }
+
+        foreach ($this->actions as $method => $variables) {
+            if (method_exists($this, $method) && is_callable([$this, $method])) {
+                try {
+                    $actionString = call_user_func_array([$this, $method], $variables);
+                    $this->printSkill($this->showSkill($actionString));
+                } catch (\Exception $e) {
+
+                }
+            }
+        }
+    }
 
     /**
-     * @param $food
+     * @return string
+     * @throws AnimalException
+     */
+    public function getType() : string
+    {
+        if (!$this->type) {
+            throw new AnimalException('Animal should have type');
+        }
+
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type) : void
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @param string $food
      *
      * @return string
      */
-    public function eat($food) : string
+    public function eat(string $food) : string
     {
-        return static::getName() . ' eat ' . $food;
+        return 'eat ' . $food;
     }
 
     /**
      * @param $skill
      */
-    public static function printSkill($skill) : void
+    public function printSkill($skill) : void
     {
-        echo $skill.PHP_EOL;
+        echo $skill . PHP_EOL;
+    }
+
+    /**
+     * @param $skill
+     *
+     * @return string
+     */
+    public function showSkill($skill) : string
+    {
+         return implode(' ', [$this->getType(), $skill]);
     }
 
     /**
      * @param string $name
      * @param array $arguments
+     *
      * @return string
+     * @throws AnimalException
      */
     public function __call($name, $arguments)
     {
-        Logger::getInstance()->log()->notice(static::class.'::'.$name.' does not exist');
-
-        return 'I can\'t '.$name;
+        throw new AnimalException('I can\'t '.$name);
     }
 }

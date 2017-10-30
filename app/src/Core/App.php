@@ -30,11 +30,11 @@ class App
      */
     public function run() : void
     {
-        try{
+        try {
             $this->container->get('logger')->log()->debug('Start application');
 
             $animals = $this->container->get('animal_factory')->getAnimals();
-            $zoo = new Zoo();
+            $zoo = $this->container->get('zoo');
             $zoo->addAnimals($animals);
             $zoo->showAnimalSkills();
 

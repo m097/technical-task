@@ -2,13 +2,14 @@
 
 namespace Module\Zoo;
 
+use Module\Module;
 use Module\Zoo\Animals\AbstractAnimal;
 
 /**
  * Class Zoo
  * @package Module\Zoo
  */
-class Zoo
+class Zoo extends Module
 {
     /**
      * @var AbstractAnimal[]
@@ -39,9 +40,12 @@ class Zoo
     public function showAnimalSkills() : void
     {
         foreach ($this->animals as $animal) {
-            $animal->behave();
-            AbstractAnimal::printSkill($animal->eat('food'));
-            echo '------------------'.PHP_EOL;
+            try {
+                $animal->behave();
+                echo '------------------'.PHP_EOL;
+            } catch (\Exception $exception) {
+                $this->getLogger()->log()->error($exception->getMessage());
+            }
         }
     }
 }

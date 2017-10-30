@@ -14,14 +14,15 @@ class Cat extends AbstractMammal
 {
     public function __construct()
     {
+        parent::__construct();
         $this->setType('cat');
         $this->setWalkBehaviour(new WalkOnFourPaws());
         $this->setVoiceBehaviour(new Meow());
 
-        $this->actions = [
-            'walk' => [],
-            'voice' => []
-        ];
+        $this->actions()
+             ->addAction('walk' , [])
+             ->addAction('voice' , [])
+        ;
     }
 
 }

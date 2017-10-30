@@ -13,11 +13,10 @@ class Rat extends AbstractMammal
 {
     public function __construct()
     {
+        parent::__construct();
         $this->setType('rat');
         $this->setVoiceBehaviour(new Pi());
 
-        $this->actions = [
-            'voice' => [],
-        ];
+        $this->actions()->addAction('voice' , []);
     }
 }

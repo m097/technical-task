@@ -14,15 +14,16 @@ class Sparrow extends AbstractBird
 {
     public function __construct()
     {
+        parent::__construct();
         $this->setType('sparrow');
         $this->setWalkBehaviour(new WalkOnTwoPaws());
         $this->setFlyBehaviour(new FlyWithWings());
         $this->setVoiceBehaviour(new Tweet());
 
-        $this->actions = [
-            'walk' => [],
-            'voice' => [],
-            'fly' => [],
-        ];
+        $this->actions()
+            ->addAction('walk' , [])
+            ->addAction('voice' , [])
+            ->addAction('fly' , [])
+        ;
     }
 }

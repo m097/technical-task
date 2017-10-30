@@ -24,6 +24,7 @@ class Dog extends AbstractMammal
 
     public function __construct()
     {
+        parent::__construct();
         $this->setType('dog');
         $this->setVoiceBehaviour(new Wuf());
 
@@ -32,12 +33,12 @@ class Dog extends AbstractMammal
             self::MOVE_BEHAVIOUR_RUN => new Run(),
         ];
 
-        $this->actions = [
-            'walk' => [],
-            'run' => [],
-            'voice' => [],
-            'byte' => ['man'],
-        ];
+        $this->actions()
+             ->addAction('walk' , [])
+             ->addAction('run' , [])
+             ->addAction('voice' , [])
+             ->addAction('byte' , ['man'])
+        ;
     }
 
     /**
@@ -70,12 +71,15 @@ class Dog extends AbstractMammal
         return 'has bitten ' . $object;
     }
 
-    private function setMoveBehaviour($key)
+    /**
+     * @param string $key
+     */
+    private function setMoveBehaviour(string $key)
     {
         if (array_key_exists($key, $this->moveBehaviours)) {
             $this->setWalkBehaviour($this->moveBehaviours[$key]);
         } else {
-            $this->setWalkBehaviour($this->moveBehaviours[$this->MOVE_BEHAVIOUR_WALK]);
+            $this->setWalkBehaviour($this->moveBehaviours[self::MOVE_BEHAVIOUR_WALK]);
         }
     }
 }

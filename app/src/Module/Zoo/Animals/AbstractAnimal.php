@@ -2,6 +2,7 @@
 
 namespace Module\Zoo\Animals;
 
+use Module\Zoo\Actions\ActionsBag;
 use Module\Zoo\Animals\Traits\Fly;
 use Module\Zoo\Animals\Traits\Voice;
 use Module\Zoo\Animals\Traits\Walk;
@@ -22,27 +23,45 @@ abstract class AbstractAnimal
      */
     private $type;
 
-    protected $actions = [];
+    /**
+     * @var ActionsBag
+     */
+    private $actions;
+
+    public function __construct()
+    {
+        $this->actions = new ActionsBag($this);
+    }
 
     /**
      * @return void
      */
     public function behave() : void
     {
-        if (!array_key_exists('eat', $this->actions)) {
-            $this->actions['eat'] = ['food'];
+        if (!$this->actions || !$this->actions instanceof ActionsBag) {
+            $this->actions = new ActionsBag($this);
         }
 
-        foreach ($this->actions as $method => $variables) {
-            if (method_exists($this, $method) && is_callable([$this, $method])) {
-                try {
-                    $actionString = call_user_func_array([$this, $method], $variables);
-                    $this->printSkill($this->showSkill($actionString));
-                } catch (\Exception $e) {
+        if (!$this->actions->hasAction('eat')) {
+            $this->actions->addAction('eat', ['food']);
+        }
 
-                }
+        foreach ($this->actions->getActions() as $action) {
+            try {
+                $actionString = $action->run();
+                $this->printSkill($this->showSkill($actionString));
+            } catch (\Exception $e) {
+
             }
         }
+    }
+
+    /**
+     * @return ActionsBag
+     */
+    public function actions() : ActionsBag
+    {
+        return $this->actions;
     }
 
     /**
@@ -61,7 +80,7 @@ abstract class AbstractAnimal
     /**
      * @param string $type
      */
-    public function setType(string $type) : void
+    protected function setType(string $type) : void
     {
         $this->type = $type;
     }
